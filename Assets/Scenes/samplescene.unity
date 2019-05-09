@@ -4954,7 +4954,7 @@ GameObject:
   - component: {fileID: 872928023}
   - component: {fileID: 872928022}
   m_Layer: 0
-  m_Name: LaunchPad (1)
+  m_Name: BoostPad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5065,7 +5065,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 872928021}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -78.88, y: 262.13, z: -47.43}
+  m_LocalPosition: {x: -892.5, y: 0.1, z: 1.1}
   m_LocalScale: {x: 2, y: 0.2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -6978,7 +6978,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1349095076}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -82.77, y: 261.87, z: -47.43}
+  m_LocalPosition: {x: -903.3, y: 0.1, z: 5.6}
   m_LocalScale: {x: 2, y: 0.2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -10546,17 +10546,17 @@ PrefabInstance:
     - target: {fileID: 646801567163629171, guid: 44cb5d349931b314fb5753b740b5a7a5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -86.24
+      value: -887.9
       objectReference: {fileID: 0}
     - target: {fileID: 646801567163629171, guid: 44cb5d349931b314fb5753b740b5a7a5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 264.37
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 646801567163629171, guid: 44cb5d349931b314fb5753b740b5a7a5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -47.43
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 646801567163629171, guid: 44cb5d349931b314fb5753b740b5a7a5,
         type: 3}
@@ -10598,26 +10598,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3399668937638805675, guid: 44cb5d349931b314fb5753b740b5a7a5,
+        type: 3}
+      propertyPath: walkSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3399668937638805675, guid: 44cb5d349931b314fb5753b740b5a7a5,
+        type: 3}
+      propertyPath: runSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3399668937638805675, guid: 44cb5d349931b314fb5753b740b5a7a5,
+        type: 3}
+      propertyPath: dashDuration
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6256297809152986432, guid: 44cb5d349931b314fb5753b740b5a7a5,
         type: 3}
       propertyPath: attachedCamera
       value: 
       objectReference: {fileID: 1249803053972221154}
-    - target: {fileID: 3399668937638805675, guid: 44cb5d349931b314fb5753b740b5a7a5,
-        type: 3}
-      propertyPath: walkSpeed
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 3399668937638805675, guid: 44cb5d349931b314fb5753b740b5a7a5,
-        type: 3}
-      propertyPath: runSpeed
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 3399668937638805675, guid: 44cb5d349931b314fb5753b740b5a7a5,
-        type: 3}
-      propertyPath: dashDuration
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44cb5d349931b314fb5753b740b5a7a5, type: 3}
 --- !u!4 &1249803053972221154 stripped

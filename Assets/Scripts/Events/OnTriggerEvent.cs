@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class OnTriggerEvent : MonoBehaviour
+public class OnTriggerEvent :Player
 {
     public string hitTag;
     public UnityEvent onEnter, onStay, onExit;
@@ -25,10 +25,16 @@ public class OnTriggerEvent : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("aye");
+        
         if(other.tag == hitTag || hitTag == "")
         {
             onEnter.Invoke();
+        }
+        if(other.tag == "Player")
+        {
+            Debug.Log("aye");
+            Quaternion padDir = transform.rotation;
+            BoostDirectionPad(padDir);
         }
     }
 

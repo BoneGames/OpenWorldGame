@@ -12,6 +12,11 @@ public class Player : MonoBehaviour
     [Header("Dash")]
     public float dashSpeed = 50f;
     public float dashDuration = .5f;
+    public float dashtimer;
+    public bool dashing;
+    Quaternion _boostForward;
+
+    public bool dashingDir;
 
     private CharacterController controller; // Reference to CharacterController
     private Vector3 motion; // Is the movement offset per frame
@@ -56,6 +61,31 @@ public class Player : MonoBehaviour
             currentSpeed = walkSpeed;
         }
 
+        if(dashing)
+        {
+            inputV += Mathf.Lerp(1,0,1-dashtimer);
+            dashtimer -= Time.deltaTime;
+            currentSpeed = dashSpeed;
+            if(dashtimer < 0)
+            {
+                dashing = false;
+                currentSpeed = inputRun ? runSpeed : walkSpeed;
+            }
+        }
+        if(dashingDir)
+        {
+            inputV = BoostDirectionPad(_boostForward).eulerAngles.normalized.z;
+            inputH = BoostDirectionPad(_boostForward).eulerAngles.normalized.x;
+            dashtimer -= Time.deltaTime;
+            currentSpeed = dashSpeed;
+            if (dashtimer < 0)
+            {
+                dashingDir = false;
+                currentSpeed = inputRun ? runSpeed : walkSpeed;
+            }
+        }
+
+
         // Move character motion with inputs
         Move(inputH, inputV);
         // Is the Player grounded?
@@ -98,7 +128,6 @@ public class Player : MonoBehaviour
             // normalise
             direction.Normalize();
         }
-        Debug.Log(motion);
         // Apply motion to only X and Z
         motion.x = direction.x * currentSpeed;
         motion.z = direction.z * currentSpeed;
@@ -111,24 +140,39 @@ public class Player : MonoBehaviour
 
     }
 
+    public Quaternion BoostDirectionPad(Quaternion boostForward)
+    {
+        _boostForward = boostForward;
+        Debug.Log("PlayerForward: "+transform.rotation);
+        Debug.Log("PADForward: " + boostForward);
+        dashtimer = dashDuration;
+        dashingDir = true;
+        Quaternion playerForward = transform.rotation;
+        Quaternion newRotation = playerForward * boostForward;
+        return newRotation;
+    }
+
     public void Dash()
     {
-        StartCoroutine(SpeedBoost(dashSpeed, walkSpeed, dashDuration));
+        dashtimer = dashDuration;
+        dashing = true;
+
+        //StartCoroutine(SpeedBoost(dashSpeed, walkSpeed, dashDuration));
     }
 
-    public IEnumerator SpeedBoost(float startSpeed, float endSpeed, float duration)
-    {
-        currentSpeed = startSpeed;
-        float startTime = 0;
-        while(startTime < duration)
-        {
-            Move(0, 1);
-            startTime += Time.deltaTime;
-            yield return null;
-        }
+    //public IEnumerator SpeedBoost(float startSpeed, float endSpeed, float duration)
+    //{
+    //    currentSpeed = startSpeed;
+    //    float startTime = 0;
+    //    while(startTime < duration)
+    //    {
+    //        Move(0, 1);
+    //        startTime += Time.deltaTime;
+    //        yield return null;
+    //    }
 
-        //yield return new WaitForSeconds(duration);
+    //    //yield return new WaitForSeconds(duration);
 
-        currentSpeed = endSpeed;
-    }
+    //    currentSpeed = endSpeed;
+    //}
 }

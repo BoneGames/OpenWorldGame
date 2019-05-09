@@ -8,22 +8,29 @@ public class Player : MonoBehaviour
     public float walkSpeed = 6f;
     public float gravity = -10f;
     public float jumpHeight = 15f;
-    public float groundRayDistance = 1.1f;
+
+    [Header("Dash")]
+    public float dashSpeed = 50f;
+    public float dashDuration = .5f;
 
     private CharacterController controller; // Reference to CharacterController
     private Vector3 motion; // Is the movement offset per frame
+    private bool isJumping;
+    private float currentJumpHeight, currentSpeed;
 
-    void OnDrawGizmos()
+    private void OnValidate()
     {
-        Ray groundRay = new Ray(transform.position, -transform.up);
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position - transform.up * groundRayDistance);
+        currentJumpHeight = jumpHeight;
+        currentSpeed = walkSpeed;
     }
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        // Set intial states
+        currentSpeed = walkSpeed;
+        currentJumpHeight = jumpHeight;
     }
 
     // Update is called once per frame
@@ -32,18 +39,41 @@ public class Player : MonoBehaviour
         // Get W, A, S, D or Left, Right, Up, Down Input
         float inputH = Input.GetAxis("Horizontal");
         float inputV = Input.GetAxis("Vertical");
+
+        // Left Shift Input
+        bool inputRun = Input.GetKeyDown(KeyCode.LeftShift);
+        bool inputWalk = Input.GetKeyUp(KeyCode.LeftShift);
+
+        // Spacebar Input 
+        bool inputJump = Input.GetButtonDown("Jump");
+
+        if(inputRun)
+        {
+            currentSpeed = runSpeed;
+        }
+        if(inputWalk)
+        {
+            currentSpeed = walkSpeed;
+        }
+
         // Move character motion with inputs
         Move(inputH, inputV);
         // Is the Player grounded?
-        if (IsGrounded())
+        if (controller.isGrounded)
         {
             // Cancel gravity
             motion.y = 0f;
             // Pressing Jump Button?
-            if (Input.GetButtonDown("Jump"))
+            if (inputJump)
+            {
+                Jump(jumpHeight);
+            }
+            if(isJumping)
             {
                 // Make the Player Jump!
-                motion.y = jumpHeight;
+                motion.y = currentJumpHeight;
+                // Reset back to false
+                isJumping = false;
             }
         }
         // Apply gravity
@@ -52,17 +82,6 @@ public class Player : MonoBehaviour
         controller.Move(motion * Time.deltaTime);
     }
 
-
-    // Check if the player is touching the ground
-    bool IsGrounded()
-    {
-        return controller.isGrounded;
-        //
-        //// Raycast below the player
-        //Ray groundRay = new Ray(transform.position, -transform.up);
-        //// If hitting something
-        //return Physics.Raycast(groundRay, groundRayDistance);
-    }
 
     // Move the character's motion in direction of input
     void Move(float inputH, float inputV)
@@ -73,8 +92,43 @@ public class Player : MonoBehaviour
         // Convert local space to world space direction
         direction = transform.TransformDirection(direction);
 
+        // check if direction exceeds magnitude of 1
+        if(direction.magnitude > 1f)
+        {
+            // normalise
+            direction.Normalize();
+        }
+        Debug.Log(motion);
         // Apply motion to only X and Z
-        motion.x = direction.x * walkSpeed;
-        motion.z = direction.z * walkSpeed;
+        motion.x = direction.x * currentSpeed;
+        motion.z = direction.z * currentSpeed;
+    }
+
+    public void Jump(float height)
+    {
+        isJumping = true; // tell controller to jump at the right time
+        currentJumpHeight = height;
+
+    }
+
+    public void Dash()
+    {
+        StartCoroutine(SpeedBoost(dashSpeed, walkSpeed, dashDuration));
+    }
+
+    public IEnumerator SpeedBoost(float startSpeed, float endSpeed, float duration)
+    {
+        currentSpeed = startSpeed;
+        float startTime = 0;
+        while(startTime < duration)
+        {
+            Move(0, 1);
+            startTime += Time.deltaTime;
+            yield return null;
+        }
+
+        //yield return new WaitForSeconds(duration);
+
+        currentSpeed = endSpeed;
     }
 }

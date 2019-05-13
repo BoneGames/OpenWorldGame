@@ -205,3 +205,4 @@ MonoBehaviour:
   bulletHolePrefab: {fileID: 5904778190403064552, guid: 2ad163943beee8a4dbdf56a179f0c554,
     type: 3}
   line: {fileID: 5405022464510818895}
+  cube: {fileID: 8043050610867244203, guid: 9f29aa355a6b6e54cbad716d059741eb, type: 3}

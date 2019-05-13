@@ -14,6 +14,8 @@ public class Bullet : MonoBehaviour
 
     private Rigidbody rigid;
 
+    public GameObject cube;
+
     Vector3 start, end;
 
     void Awake()
@@ -21,44 +23,81 @@ public class Bullet : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         start = transform.position;
     }
-    void Update()
+
+
+    public static float AngleOffAroundAxis(Vector3 v, Vector3 forward, Vector3 axis)
     {
-        line.transform.rotation = Quaternion.LookRotation(rigid.velocity);
+        Vector3 right = Vector3.Cross(axis, forward);
+        return Mathf.Atan2(Vector3.Dot(v, right), Vector3.Dot(v, forward)) * Mathf.Rad2Deg;
     }
+
+    // Sorting method to get largest float magnitude in normal Vector NOTE only works well for surfaces oriented to world axis
+    Vector3 Displacement(Vector3 _displacement, Vector3 normal)
+    {
+        if (Mathf.Abs(normal.x) > Mathf.Abs(normal.z))
+        {
+            if (Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
+            {
+                _displacement = new Vector3(_displacement.x, 0, 0);
+            }
+        }
+        else if (Mathf.Abs(normal.z) > Mathf.Abs(normal.x))
+        {
+            if (Mathf.Abs(normal.z) > Mathf.Abs(normal.y))
+            {
+                _displacement = new Vector3(0, 0, _displacement.z);
+            }
+        }
+        else
+        {
+            _displacement = new Vector3(0, _displacement.y, 0);
+        }
+
+        return _displacement;
+    }
+
     void OnCollisionEnter(Collision col)
     {
-        end = transform.position;
         // Get contact point from collision
         ContactPoint contact = col.contacts[0];
+        // get end point Vector
+        end = contact.point;
+        // Get bulletDirection
+        Vector3 bulletDir = end - start;
+        // Get Initial rotation of bullet Decal - adding 90 for object setup;
+        Quaternion rotation = Quaternion.LookRotation(contact.normal) *
+                              Quaternion.AngleAxis(90, Vector3.right);
+
         // Spawn a BulletHole on that contact point
-        GameObject bHole = Instantiate(bulletHolePrefab, contact.point, Quaternion.LookRotation(contact.normal) *
-                                                     Quaternion.AngleAxis(90, Vector3.right));
+        GameObject bHole = Instantiate(bulletHolePrefab, contact.point, rotation); 
 
-        Vector3 bulletDir = (end - start).normalized;
-        bHole.transform.rotation = Quaternion.LookRotation(bulletDir);
+        // Get bullet Direction
+        Vector3 dir = (end - start);
 
-        // the bullet is stretching in the right direction, but still needs to be oriented to be flat on the surface it lands on - is currently lying on the path the bullet took
-        //bHole.transform.right = contact.point;
-   
-            float stretch = (180 - Vector3.Angle(bulletDir, contact.normal))/72;
-            Debug.Log(stretch);
-   
-        bHole.transform.localScale = new Vector3(0.25f, 0.25f, stretch);
-
-   
-        //Debug.Log("contactNormal: " + contact.normal);
-        //Debug.Log("bulletTrans: " + transform.forward);
+        // Get displacement on normal axis between shootpoint and impactpoint
+        Vector3 displacement = Displacement(-dir, contact.normal);  
         
+        // create lookPoint for bullet hole once it's flat on the face it's hit
+        Vector3 lookPoint = (transform.position + dir) + displacement;
+       
+        // create this lookpoint for testing purposes
+        GameObject _bHole = Instantiate(cube, lookPoint, rotation);
 
-        
-        Quaternion lookRot = Quaternion.LookRotation(transform.forward, contact.normal); 
-     
-        //bHole.transform.localScale = new Vector3(0, 0, stretch);
+        // rotate Decal to look at point with normal as it's up
+        bHole.transform.LookAt(lookPoint, contact.normal);
+
+        // Get angle between normal and bullet dir
+        float impactAngle = 180 - Vector3.Angle(bulletDir, contact.normal);
+
+        // Get scale to stretch Decal
+        Vector3 newScale = new Vector3(0.2f, 0.2f, (0.2f * (1 + impactAngle / 45)));
+
+        // Set scale
+        bHole.transform.localScale = newScale;
+
         // Destroy self
         Destroy(gameObject);
     }
-
-  
     public void Fire(Vector3 lineOrigin, Vector3 direction)
     {
         // Set line position to origin

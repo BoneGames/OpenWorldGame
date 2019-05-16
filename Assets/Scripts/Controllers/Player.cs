@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     public float dashDuration = .5f;
     public float dashtimer;
     public bool dashing;
-    Quaternion _boostForward;
+    Quaternion _boostForward;    
 
     public bool dashingDir;
 
@@ -22,6 +22,8 @@ public class Player : MonoBehaviour
     private Vector3 motion; // Is the movement offset per frame
     private bool isJumping;
     private float currentJumpHeight, currentSpeed;
+
+    public static bool Manny;
 
     private void OnValidate()
     {
@@ -41,6 +43,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            Manny = !Manny;
+            Debug.Log("Manny = " + Manny);
+        }
+
+
         // Get W, A, S, D or Left, Right, Up, Down Input
         float inputH = Input.GetAxis("Horizontal");
         float inputV = Input.GetAxis("Vertical");

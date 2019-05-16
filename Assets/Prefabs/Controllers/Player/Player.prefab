@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 545159540}
-  - component: {fileID: 545159541}
+  - component: {fileID: 1855405284}
   m_Layer: 9
   m_Name: Pistol
   m_TagString: Untagged
@@ -66,7 +66,7 @@ Transform:
   m_Father: {fileID: 288540830}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &545159541
+--- !u!114 &1855405284
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -75,20 +75,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 545159539}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ef7954af11874f4187645a1b8037073, type: 3}
+  m_Script: {fileID: 11500000, guid: 4d2580f1896c6e4418c23b0eeef9b596, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  maxAmmo: 500
+  attackRate: 0.2
+  canShoot: 0
+  shotOrigin: {fileID: 1042412403}
+  projectilePrefab: {fileID: 6233543381908820212, guid: 41e31a7ac89e767478f5f1e03b01e9ae,
+    type: 3}
+  maxReserve: 500
   maxClip: 20
   spread: 2
-  recoil: 3
+  recoil: 1
   range: 10
-  shootRate: 0.2
-  shotOrigin: {fileID: 1042412403}
-  bulletPrefab: {fileID: 6233543381908820212, guid: 41e31a7ac89e767478f5f1e03b01e9ae,
-    type: 3}
-  canShoot: 0
 --- !u!1 &650445728
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,7 +236,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1042412402}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.316, z: 0.619}
+  m_LocalPosition: {x: 0, y: 0.316, z: 1.145}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_Children: []
   m_Father: {fileID: 545159540}
@@ -483,7 +483,7 @@ GameObject:
   - component: {fileID: 6259299715454321531}
   m_Layer: 9
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -790,6 +790,29 @@ MonoBehaviour:
   currentWeapon: {fileID: 0}
   weapons: []
   currentWeaponIndex: 0
+--- !u!114 &1391182938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647629671448336224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d2580f1896c6e4418c23b0eeef9b596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
+  attackRate: 0.2
+  canShoot: 0
+  shotOrigin: {fileID: 1042412403}
+  projectilePrefab: {fileID: 6233543381908820212, guid: 41e31a7ac89e767478f5f1e03b01e9ae,
+    type: 3}
+  maxReserve: 500
+  maxClip: 20
+  spread: 2
+  recoil: 1
+  range: 10
 --- !u!1001 &646801568286077050
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -797,14 +820,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 288540830}
     m_Modifications:
-    - target: {fileID: 1461629807306522, guid: 5253f57425dc12444b9f96f505641edb, type: 3}
-      propertyPath: m_Name
-      value: AK47
-      objectReference: {fileID: 0}
-    - target: {fileID: 1461629807306522, guid: 5253f57425dc12444b9f96f505641edb, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4961695010069904, guid: 5253f57425dc12444b9f96f505641edb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -849,8 +864,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1461629807306522, guid: 5253f57425dc12444b9f96f505641edb, type: 3}
+      propertyPath: m_Name
+      value: AK47
+      objectReference: {fileID: 0}
+    - target: {fileID: 1461629807306522, guid: 5253f57425dc12444b9f96f505641edb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5253f57425dc12444b9f96f505641edb, type: 3}
+--- !u!1 &647629671448336224 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1461629807306522, guid: 5253f57425dc12444b9f96f505641edb,
+    type: 3}
+  m_PrefabInstance: {fileID: 646801568286077050}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &641840169629281770 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4961695010069904, guid: 5253f57425dc12444b9f96f505641edb,

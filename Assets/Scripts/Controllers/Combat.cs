@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using System.Linq;
 using NaughtyAttributes;
 
 
 [RequireComponent(typeof(Player))]
-public class Shooting : MonoBehaviour
+public class Combat : MonoBehaviour, IHealth
 {
+    [ProgressBar("Health", 100, ProgressBarColor.Green)]
+    public int health = 100;
+
     [BoxGroup("Weapon")] public Weapon currentWeapon;
     [BoxGroup("Weapon")] public List<Weapon> weapons = new List<Weapon>();
     [BoxGroup("Weapon")] public int currentWeaponIndex = 0;
@@ -50,13 +52,7 @@ public class Shooting : MonoBehaviour
                 if (currentWeapon.canShoot)
                 {
                     // Shoot the weapon
-                    currentWeapon.Shoot();
-                    // Apply Weapon Recoil
-                    Vector3 euler = Vector3.up * 2f;
-                    // Randomize the pitch
-                    euler.x = Random.Range(-1f, 1f);
-                    // Apply offset to camera using weapon recoil
-                    cameraLook.SetTargetOffset(euler * currentWeapon.recoil);
+                    currentWeapon.Attack();
                 }
             }
         }
@@ -75,5 +71,19 @@ public class Shooting : MonoBehaviour
             // Update currentWeaponIndex
             currentWeaponIndex = index;
         }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            print("Ya dead!");
+        }
+    }
+
+    public void Heal(int heal)
+    {
+        health += heal;
     }
 }

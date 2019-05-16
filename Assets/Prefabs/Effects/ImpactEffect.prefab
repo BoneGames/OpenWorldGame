@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5904778190403064553}
-  - component: {fileID: 5904778190403064470}
+  - component: {fileID: 8054007571049841937}
+  - component: {fileID: 1819616136902497055}
   m_Layer: 0
-  m_Name: BulletHole
+  m_Name: ImpactEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,13 +27,13 @@ Transform:
   m_GameObject: {fileID: 5904778190403064552}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 92.957, y: 73.159, z: 267.15}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.5, y: 2, z: 0.5}
   m_Children:
   - {fileID: 4000013560920940}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5904778190403064470
+--- !u!114 &8054007571049841937
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,18 +42,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 5904778190403064552}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
+  m_Script: {fileID: 11500000, guid: eda9f1e814eb9cf41aa112608f6af317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 31a804519f3626c41a2669d2199ace9f, type: 2}
-  m_DrawDistance: 1000
-  m_FadeScale: 0.588
-  m_UVScale: {x: 1, y: 1}
-  m_UVBias: {x: 0, y: 0}
-  m_AffectsTransparency: 1
-  m_Offset: {x: 0, y: 0, z: 0}
-  m_Size: {x: 1, y: 1, z: 1}
-  m_IsCropModeEnabled: 0
+  eventRate: 1
+  damage: 5
+  visualEffectPrefab: {fileID: 7174757481971974233, guid: 5c8c312e8d9ff3a44a3a72ecd1cf4673,
+    type: 3}
+  hitObject: {fileID: 0}
+--- !u!114 &1819616136902497055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904778190403064552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3da2a0c433506f2459bc0c824cca733a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delay: 1
 --- !u!1001 &1713838720
 PrefabInstance:
   m_ObjectHideFlags: 0

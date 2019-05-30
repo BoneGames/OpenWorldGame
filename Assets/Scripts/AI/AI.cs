@@ -53,17 +53,14 @@ public class AI : MonoBehaviour
         return null;
     }
 
+    private void Reset()
+    {
+        oldWeights = behaviourWeights;
+    }
+
     private void OnValidate()
     {
-        // give this AI to all steeringBehaviours
-        foreach (SteeringBehaviour sb in behaviours)
-        {
-            //Debug.Log("AI Given to: " + sb.name);
-            //sb.ai = this;
-            behaviourWeights.Add(sb.weighting);
-        }
-
-        //DistributeWeighting();
+        DistributeWeighting();
     }
 
     void ApplyNewWeights()
@@ -92,7 +89,7 @@ public class AI : MonoBehaviour
         }
     }
 
-        private void Update()
+    private void Update()
     {
         Vector3 force = Vector3.zero;
 
@@ -126,80 +123,66 @@ public class AI : MonoBehaviour
         foreach (SteeringBehaviour b in behaviours)
         {
             totalWeight += b.weighting;
-            Debug.Log("added " + b.weighting + " from: " + b.name);
+            //Debug.Log("added " + b.weighting + " from: " + b.name);
+        }
+        foreach (int b in behaviourWeights)
+        {
+            totalWeight += b;
+            //Debug.Log("added " + b.weighting + " from: " + b.name);
         }
         return totalWeight - 1;
     }
 
+    float GetWeightChangeToApply(List<SteeringBehaviour> _outOfRange)
+    {
+        if(GetExcessWeight() > 0)
+        {
+            return GetExcessWeight() / (behaviours.Length - (1 + _outOfRange.Count) * -1);
+        }
+        else
+        {
+            return 0;
+        }
+        
+    }
 
     public void DistributeWeighting()
     {
+        Debug.Log(1);
         List<SteeringBehaviour> outOfRange = new List<SteeringBehaviour>();
-        // get change in weight
-        float excessWeight = GetExcessWeight(); // NOTE - access slider maximum in steeringBehaviour?
+        float weightChangeToApply = GetWeightChangeToApply(outOfRange);
 
-        if (excessWeight != 0)
+        while (weightChangeToApply != 0)
         {
-            float weightChangeToApply = excessWeight / (behaviours.Length - (1 + outOfRange.Count) * -1);
-            Debug.Log(weightChangeToApply);
-
-            // Add portioned weight change to all elements except the original changed one
-            while (GetExcessWeight() != 0)
+            Debug.Log(2);
+            float excessWeight = 0;
+            weightChangeToApply = GetWeightChangeToApply(outOfRange);
+            for (int i = 0; i < behaviours.Length; i++)
             {
-                weightChangeToApply = excessWeight / (behaviours.Length - (1 + outOfRange.Count) * -1);
-                Debug.Log(weightChangeToApply);
-
-                for (int i = 0; i < behaviours.Length; i++)
+                if (i != changedWeightIndex)
                 {
-                    if (i != changedWeightIndex)
+                    if (behaviours[i].weighting + weightChangeToApply < 0)
                     {
-                        if (behaviours[i].weighting <= 0)
-                        {
-                            behaviours[i].weighting = 0;
-                            excessWeight += weightChangeToApply;
-                            outOfRange.Add(behaviours[i]);
-                        }
-                        else if (behaviours[i].weighting >= 1)
-                        {
-                            behaviours[i].weighting = 1;
-                            excessWeight += weightChangeToApply;
-                            outOfRange.Add(behaviours[i]);
-                        }
-                        else
-                        {
-                            behaviours[i].weighting += weightChangeToApply;
-                            Debug.Log("added " + weightChangeToApply + " to: " + behaviours[i].name + ". Now " + behaviours[i].name + " weighting = " + behaviours[i].weighting);
-                        }
+
+                        //excessWeight += (weightChangeToApply - behaviours[i].weighting);
+                        outOfRange.Add(behaviours[i]);
+                        behaviours[i].weighting = 0;
                     }
+                    else if (behaviours[i].weighting + weightChangeToApply > 1)
+                    {
+                        //excessWeight += (weightChangeToApply - (1-behaviours[i].weighting));
+                        behaviours[i].weighting = 1;
+                        outOfRange.Add(behaviours[i]);
+                    }
+                    else
+                    {
+                        behaviours[i].weighting += weightChangeToApply;
+                    }
+
+                    
+                    //Debug.Log("added " + weightChangeToApply + " to: " + behaviours[i].name + ". Now " + behaviours[i].name + " weighting = " + behaviours[i].weighting);
                 }
             }
-           
-
-            //// add portioned weight change
-            //for (int i = 0; i < behaviours.Length; i++)
-            //{
-            //    if (i != changedWeightIndex)
-            //    {
-            //        if (behaviours[i].weighting <= 0)
-            //        {
-            //            behaviours[i].weighting = 0;
-            //            leftovers += weightChangeToApply;
-            //            outOfRange.Add(behaviours[i]);
-            //        }
-            //        if (behaviours[i].weighting >= 1)
-            //        {
-            //            behaviours[i].weighting = 1;
-            //            leftovers += weightChangeToApply;
-            //            outOfRange.Add(behaviours[i]);
-            //        }
-            //        behaviours[i].weighting += weightChangeToApply;
-            //        Debug.Log("added " + weightChangeToApply + " to: " + behaviours[i].name + ". Now " + behaviours[i].name + " weighting = " + behaviours[i].weighting);
-            //    }
-            //}
-            //weightChangeToApply = leftovers / ((behaviours.Length - 1) - outOfRange.Count);
-
-           
         }
-
     }
 }
